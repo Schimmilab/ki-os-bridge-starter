@@ -1,0 +1,26 @@
+name: guard
+on: [push, pull_request]
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Scan exchange messages for cross-sphere internals
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            base="${{ github.event.pull_request.base.sha }}"
+          else
+            base="${{ github.event.before }}"
+          fi
+          # Fallback (first push / empty base): consider all tracked files
+          if [ -z "$base" ] || ! git cat-file -e "${base}^{commit}" 2>/dev/null; then
+            changed=$(git ls-files)
+          else
+            changed=$(git diff --name-only --diff-filter=ACM "$base" "${{ github.sha }}")
+          fi
+          # Only check exchange messages, not the infrastructure
+          files=$(printf '%s\n' $changed | grep -E '^(to-personal/|to-company/|exchange-log\.md$)' || true)
+          [ -z "$files" ] && { echo "no exchange messages in diff"; exit 0; }
+          echo "$files" | xargs sh scripts/guard-scan.sh

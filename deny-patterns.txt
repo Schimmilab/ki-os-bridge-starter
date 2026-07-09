@@ -1,0 +1,22 @@
+# Generic block patterns (VERSIONED). Extended regex, case-insensitive.
+# Do NOT put concrete sensitive terms here — those belong in
+# deny-patterns.local.txt (gitignored, local to the restricted machine only).
+#
+# Scanned files are ONLY exchange messages (to-personal/, to-company/,
+# exchange-log.md), NOT the repo infrastructure
+# (README, ramp-up, this file, scripts, workflows).
+
+# Example unambiguous signals — REPLACE with your own company's domains/markers:
+@example-corp\.com
+https?://[a-z0-9.-]*\.example-corp\.(com|net|local)
+\btop secret\b
+\binternal use only\b
+
+# Ambiguous classification labels — can appear in normal text.
+# Enable as needed (uncomment the line):
+# \bconfidential\b
+# \bproprietary\b
+
+# Ticket / project codes — adapt to your format + enable,
+# otherwise false positives like "ISO-9001":
+# \b[A-Z]{2,5}-[0-9]{3,6}\b

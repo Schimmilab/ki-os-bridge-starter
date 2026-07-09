@@ -1,0 +1,3 @@
+# Sensitive, concrete block patterns stay local — NEVER in the repo:
+deny-patterns.local.txt
+.DS_Store

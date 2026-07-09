@@ -1,0 +1,17 @@
+# LOCAL, sensitive block patterns — copy this file to `deny-patterns.local.txt`
+# (which is gitignored) and fill in the concrete internal strings for THIS machine.
+#
+# Keep the real file OUT of the repo: it must never be committed, so the deny-list
+# itself doesn't reveal the internals it protects.
+#
+# Extended regex, case-insensitive. One pattern per line. Examples:
+
+# internal project / product code names
+# \bProjectFalcon\b
+# \bBlueHarbor\b
+
+# customer names
+# \bAcme (Industries|GmbH)\b
+
+# internal hostnames / systems
+# \b[a-z0-9-]+\.intra\.example-corp\.local\b

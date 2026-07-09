@@ -1,0 +1,15 @@
+#!/bin/sh
+# Blocks commits with possible cross-sphere internals in EXCHANGE MESSAGES.
+# Scanned: to-personal/, to-company/ and exchange-log.md — not the infrastructure.
+# Deliberate override (only if you are sure): git commit --no-verify
+root=$(git rev-parse --show-toplevel)
+files=$(git diff --cached --name-only --diff-filter=ACM | grep -E '^(to-personal/|to-company/|exchange-log\.md$)' || true)
+[ -z "$files" ] && exit 0
+# shellcheck disable=SC2086
+sh "$root/scripts/guard-scan.sh" $files || {
+  echo "" >&2
+  echo "COMMIT BLOCKED: possible cross-sphere internals in an exchange message (see above)." >&2
+  echo "Clean it up and commit again. Deliberate override: git commit --no-verify" >&2
+  exit 1
+}
+exit 0
